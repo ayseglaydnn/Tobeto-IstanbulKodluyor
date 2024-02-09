@@ -1,4 +1,5 @@
-﻿using ConsoleAppTobeto2.DataAccess.Concretes.InMemory;
+﻿using ConsoleAppTobeto2.DataAccess.Abstracts;
+using ConsoleAppTobeto2.DataAccess.Concretes.InMemory;
 using ConsoleAppTobeto2.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,19 @@ namespace ConsoleAppTobeto2.Business.Concretes
 {
     public class ProductManager
     {
-        ImProductDal productDal = new ImProductDal();
+        IProductDal _productDal;
+        public ProductManager(IProductDal productDal)
+        {
+            _productDal = productDal;
+        }
         public void Add(Product product)
         {
             //business rules
-            productDal.Add(product);
+            _productDal.Add(product);
         }
         public List<Product> GetProducts()
         {
-            return productDal.GetProducts();
+            return _productDal.GetProducts();
         }
     }
 }

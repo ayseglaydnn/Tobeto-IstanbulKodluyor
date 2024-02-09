@@ -6,31 +6,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleAppTobeto2.DataAccess.Concretes.InMemory
+namespace ConsoleAppTobeto2.DataAccess.Concretes.EntityFramework
 {
-    public class ImCategoryDal : ICategoryDal
+    public class EfCategoryDal : ICategoryDal
     {
         List<Category> categories = new List<Category>();
-        public ImCategoryDal()
+        public EfCategoryDal()
         {
 
             categories.Add(new Category
             {
                 Id = 1,
                 Name = "Market",
-                
+
             });
             categories.Add(new Category
             {
                 Id = 2,
                 Name = "Mağaza",
-                
+
             });
             categories.Add(new Category
             {
                 Id = 3,
                 Name = "Elektronik",
-                
+
             });
 
         }

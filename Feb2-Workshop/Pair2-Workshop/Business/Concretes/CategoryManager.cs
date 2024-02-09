@@ -1,4 +1,5 @@
-﻿using ConsoleAppTobeto2.DataAccess.Concretes.InMemory;
+﻿using ConsoleAppTobeto2.DataAccess.Abstracts;
+using ConsoleAppTobeto2.DataAccess.Concretes.InMemory;
 using ConsoleAppTobeto2.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,19 @@ namespace ConsoleAppTobeto2.Business.Concretes
 {
     public class CategoryManager
     {
-        ImCategoryDal categoryDal = new ImCategoryDal();
+        ICategoryDal _categoryDal;
+        public CategoryManager(ICategoryDal categoryDal)
+        {
+            _categoryDal = categoryDal;
+        }
         public void Add(Category category)
         {
             //business rules
-            categoryDal.Add(category);
+            _categoryDal.Add(category);
         }
         public List<Category> GetCategories()
         {
-            return categoryDal.GetCategories();
+            return _categoryDal.GetCategories();
         }
     }
 }
