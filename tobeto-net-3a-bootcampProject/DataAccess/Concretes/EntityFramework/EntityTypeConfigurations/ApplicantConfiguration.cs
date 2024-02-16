@@ -13,7 +13,7 @@ namespace DataAccess.Concretes.EntityFramework.EntityTypeConfigurations
     {
         public void Configure(EntityTypeBuilder<Applicant> builder)
         {
-            builder.ToTable("Applicants").HasKey(u => u.Id);
+            builder.ToTable("Applicants");
             builder.Property(x => x.Id).HasColumnName("Id");
             builder.Property(a => a.About).IsRequired().HasMaxLength(500).HasColumnName("About");
         }
