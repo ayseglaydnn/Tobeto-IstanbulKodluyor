@@ -25,9 +25,9 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> getAll()
+        public async Task<List<GetAllBrandResponse>> GetAll()
         {
-            return Ok(await _brandService.GetAll());
+            return await _brandService.GetAllAsync();
         }
     }
 }
