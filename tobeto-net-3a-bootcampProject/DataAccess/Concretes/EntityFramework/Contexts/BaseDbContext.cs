@@ -17,7 +17,7 @@ namespace DataAccess.Concretes.EntityFramework.Contexts
         public DbSet<User> Users { get; set; }
         public DbSet<Applicant> Applicants { get; set; }
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<Instructor> Instructors { get; set; }
+        public DbSet<Applicant> Instructors { get; set; }
 
         public BaseDbContext(DbContextOptions dbContextOptions, IConfiguration configuration)
             : base(dbContextOptions)

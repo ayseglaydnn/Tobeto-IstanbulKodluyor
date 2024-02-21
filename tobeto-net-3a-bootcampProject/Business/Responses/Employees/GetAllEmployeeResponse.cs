@@ -1,14 +1,14 @@
-﻿using Core.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concretes
+namespace Business.Responses.Employees
 {
-    public class User : BaseEntity<int>
+    public class GetAllEmployeeResponse
     {
+        public int Id { get; set; }
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -16,7 +16,6 @@ namespace Entities.Concretes
         public string NationalIdentity { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-
-        //constructure oluştur
+        public string Position { get; set; }
     }
 }

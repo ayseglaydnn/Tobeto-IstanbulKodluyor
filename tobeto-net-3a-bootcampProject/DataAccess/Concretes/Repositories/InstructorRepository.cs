@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concretes.Repositories
 {
-    public class EmployeeRepository : EfRepositoryBase<Employee, int, BaseDbContext>, IEmployeeRepository
+    public class InstructorRepository : EfRepositoryBase<Instructor, int, BaseDbContext>, IInstructorRepository
     {
-        public EmployeeRepository(BaseDbContext context) : base(context)
+        public InstructorRepository(BaseDbContext context) : base(context)
         {
         }
     }

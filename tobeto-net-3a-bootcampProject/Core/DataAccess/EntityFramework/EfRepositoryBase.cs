@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Core.DataAccess.EntityFramework
 {
-    public class EfRepositoryBase<TEntity, TEntityId, TContext> : IRepository<TEntity, TEntityId>
+    public class EfRepositoryBase<TEntity, TEntityId, TContext> : IRepository<TEntity, TEntityId> , IAsyncRepository<TEntity, TEntityId>
     where TEntity : BaseEntity<TEntityId>
     where TContext : DbContext
     {
@@ -39,8 +39,8 @@ namespace Core.DataAccess.EntityFramework
             return entity;
         }
 
-        public TEntity Get(Expression<Func<TEntity, bool>> predicate,
-    Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
+        public TEntity GetById(Expression<Func<TEntity, bool>> predicate,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null)
         {
             IQueryable<TEntity> queryable = Query();
             if (include != null)
@@ -66,5 +66,47 @@ namespace Core.DataAccess.EntityFramework
             return entity;
         }
 
+        public async Task<TEntity> AddAsync(TEntity entity)
+        {
+            entity.CreatedDate = DateTime.UtcNow;
+            await Context.AddAsync(entity);
+            await Context.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task<TEntity> DeleteAsync(TEntity entity)
+        {
+            entity.DeletedDate = DateTime.UtcNow;
+            Context.Remove(entity);
+            await Context.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task<TEntity> GetByIdAsync(Expression<Func<TEntity, bool>> predicate,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
+        {
+            IQueryable<TEntity> queryable = Query();
+            if (include != null)
+                queryable = include(queryable);
+            return await queryable.FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null)
+        {
+            IQueryable<TEntity> queryable = Query();
+            if (include != null)
+                queryable = include(queryable);
+            if (predicate != null)
+                queryable = queryable.Where(predicate);
+            return await queryable.ToListAsync();
+        }
+
+        public async Task<TEntity> UpdateAsync(TEntity entity)
+        {
+            Context.Update(entity);
+            await Context.SaveChangesAsync();
+            return entity;
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace Core.DataAccess
     {
         List<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null,
                              Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null);
-        TEntity Get(Expression<Func<TEntity, bool>> predicate,
+        TEntity GetById(Expression<Func<TEntity, bool>> predicate,
                     Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null);
 
         TEntity Add(TEntity entity);

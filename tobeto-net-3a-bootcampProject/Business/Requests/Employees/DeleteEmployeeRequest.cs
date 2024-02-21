@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Concretes
+namespace Business.Requests.Employees
 {
-    public class Applicant : User
+    public class DeleteEmployeeRequest
     {
-        public string About { get; set; }
-
+        public int Id { get; set; }
     }
 }
