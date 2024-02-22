@@ -59,7 +59,7 @@ namespace Business.Concretes
             {
                 var deletedApplicant = _applicantRepository.Delete(deleteToApplicant);
 
-                var response = new DeleteApplicantResponse {DeletedTime = deletedApplicant.DeletedDate,UserName =deletedApplicant.UserName,Id=deletedApplicant.Id};
+                var response = new DeleteApplicantResponse {DeletedDate = deletedApplicant.DeletedDate,UserName =deletedApplicant.UserName,Id=deletedApplicant.Id};
 
                 return response;
             }

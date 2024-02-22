@@ -16,6 +16,8 @@ namespace DataAccess.Concretes.EntityFramework.EntityTypeConfigurations
             builder.ToTable("Instructors");
             builder.Property(x => x.Id).HasColumnName("Id");
             builder.Property(i => i.CompanyName).IsRequired().HasMaxLength(100).HasColumnName("CompanyName");
+
+            builder.HasMany(x => x.Bootcamps); //one to many
         }
     }
 }

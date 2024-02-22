@@ -15,7 +15,7 @@ namespace DataAccess.Concretes.EntityFramework.EntityTypeConfigurations
         {
             builder.ToTable("Users").HasKey(u => u.Id);
             builder.Property(x => x.Id).HasColumnName("Id");
-            builder.Property(u => u.Username).IsRequired().HasMaxLength(50).HasColumnName("Username");
+            builder.Property(u => u.UserName).IsRequired().HasMaxLength(50).HasColumnName("Username");
             builder.Property(u => u.FirstName).IsRequired().HasMaxLength(50).HasColumnName("Name");
             builder.Property(u => u.LastName).IsRequired().HasMaxLength(50).HasColumnName("Lastname");
             builder.Property(u => u.DateOfBirth).IsRequired().HasColumnName("DatoOfBirth");

@@ -16,6 +16,8 @@ namespace DataAccess.Concretes.EntityFramework.EntityTypeConfigurations
             builder.ToTable("Applicants");
             builder.Property(x => x.Id).HasColumnName("Id");
             builder.Property(a => a.About).IsRequired().HasMaxLength(500).HasColumnName("About");
+
+            builder.HasMany(x => x.Applications); //one to many
         }
     }
 }

@@ -10,6 +10,6 @@ namespace Business.Responses.Applicants
     {
         public int Id { get; set; }
         public string UserName { get; set; }
-        public DateTime DeletedTime { get; set; }
+        public DateTime DeletedDate { get; set; }
     }
 }

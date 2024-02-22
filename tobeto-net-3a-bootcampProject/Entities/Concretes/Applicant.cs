@@ -10,5 +10,7 @@ namespace Entities.Concretes
     {
         public string About { get; set; }
 
+        public virtual ICollection<Application>? Applications { get; set; }
+
     }
 }
