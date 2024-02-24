@@ -19,9 +19,14 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<CreateBrandResponse> AddAsync(CreateBrandRequest request)
+        public async Task<IActionResult> AddAsync(CreateBrandRequest request)
         {
-            return await _brandService.AddAsync(request);
+            var result = await _brandService.AddAsync(request);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
 
         [HttpGet]
