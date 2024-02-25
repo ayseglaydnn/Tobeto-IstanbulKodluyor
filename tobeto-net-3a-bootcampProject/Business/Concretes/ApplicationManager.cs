@@ -6,12 +6,6 @@ using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
@@ -89,8 +83,8 @@ namespace Business.Concretes
 
             _mapper.Map(request, application); // Burada application nesnesinin verileri request nesnesindeki veriler ile güncelleniyor.
 
-            // application = _mapper.Map<Application>(request); şeklinde yazsaydık request nesnesinin verileriyle 
-            // Application türünde yeni bir nesne oluşturulacaktı.
+            // application = _mapper.Map<Application>(request); şeklinde yazsaydık request nesnesinin verileriyle Application
+            // türünde yeni bir nesne oluşturulacaktı. Biz yeni nesne oluşturmak değil olanı güncellemek istiyoruz.
 
             await _applicationRepository.UpdateAsync(application);
 

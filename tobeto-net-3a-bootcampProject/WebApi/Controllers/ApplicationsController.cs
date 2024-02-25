@@ -1,6 +1,5 @@
 ﻿using Business.Abstracts;
 using Business.Requests.Applications;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -23,25 +22,25 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> DeleteApplication(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             return HandleDataResult(await _applicationService.DeleteAsync(new DeleteApplicationRequest { Id = id }));
         }
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
             return HandleDataResult(await _applicationService.GetAllAsync());
         }
 
         [HttpGet("GetById/{id}")]
-        public async Task<IActionResult> GetApplicationById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
             return HandleDataResult(await _applicationService.GetByIdAsync(new GetByIdApplicationRequest { Id = id }));
         }
 
         [HttpPut("Update/{id}")]
-        public async Task<IActionResult> UpdateApplication(int id, UpdateApplicationRequest request)
+        public async Task<IActionResult> UpdateAsync(int id, UpdateApplicationRequest request)
         {
             request.Id = id;
             return HandleDataResult(await _applicationService.UpdateAsync(request));

@@ -7,10 +7,10 @@ namespace Business.Abstracts
 {
     public interface IBootcampStateService
     {
-        Task<CreateBootcampStateResponse> AddAsync(CreateBootcampStateRequest request);
-        Task<UpdateBootcampStateResponse> UpdateAsync(UpdateBootcampStateRequest request);
-        Task<DeleteBootcampStateResponse> DeleteAsync(DeleteBootcampStateRequest request);
-        Task<GetByIdBootcampStateResponse> GetById(GetByIdBootcampStateRequest request);
+        Task<IDataResult<CreateBootcampStateResponse>> AddAsync(CreateBootcampStateRequest request);
+        Task<IDataResult<UpdateBootcampStateResponse>> UpdateAsync(UpdateBootcampStateRequest request);
+        Task<IDataResult<DeleteBootcampStateResponse>> DeleteAsync(DeleteBootcampStateRequest request);
+        Task<IDataResult<GetByIdBootcampStateResponse>> GetByIdAsync(GetByIdBootcampStateRequest request);
         Task<IDataResult<List<GetAllBootcampStateResponse>>> GetAllAsync();
     }
 }

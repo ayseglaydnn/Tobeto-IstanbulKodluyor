@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Requests.BootcampStates;
-using Business.Responses.Bootcamps;
 using Business.Responses.BootcampStates;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
-using DataAccess.Concretes.Repositories;
 using Entities.Concretes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Business.Concretes
 {
@@ -26,33 +20,75 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
-        public async Task<CreateBootcampStateResponse> AddAsync(CreateBootcampStateRequest request)
+        public async Task<IDataResult<CreateBootcampStateResponse>> AddAsync(CreateBootcampStateRequest request)
         {
             BootcampState bootcampState = _mapper.Map<BootcampState>(request);
+
             await _bootcampStateRepository.AddAsync(bootcampState);
 
             CreateBootcampStateResponse response = _mapper.Map<CreateBootcampStateResponse>(bootcampState);
-            return response;
+
+            return new SuccessDataResult<CreateBootcampStateResponse>(response, "Added Successfully");
         }
 
-        public Task<DeleteBootcampStateResponse> DeleteAsync(DeleteBootcampStateRequest request)
+        public async Task<IDataResult<DeleteBootcampStateResponse>> DeleteAsync(DeleteBootcampStateRequest request)
         {
-            throw new NotImplementedException();
+            var bootcampState = await _bootcampStateRepository.GetByIdAsync(predicate: bootcampState => bootcampState.Id == request.Id);
+
+            if (bootcampState == null)
+            {
+                return new ErrorDataResult<DeleteBootcampStateResponse>("BootcampState not found");
+            }
+
+            await _bootcampStateRepository.DeleteAsync(bootcampState);
+
+            var response = _mapper.Map<DeleteBootcampStateResponse>(bootcampState);
+
+            return new SuccessDataResult<DeleteBootcampStateResponse>(response, "Deleted Successfully");
         }
 
-        public Task<IDataResult<List<GetAllBootcampStateResponse>>> GetAllAsync()
+        public async Task<IDataResult<List<GetAllBootcampStateResponse>>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            List<BootcampState> bootcampStates = await _bootcampStateRepository.GetAllAsync(include: x => x.Include(x => x.Bootcamp.Instructor).Include(x => x.Bootcamp));
+
+            List<GetAllBootcampStateResponse> responses = _mapper.Map<List<GetAllBootcampStateResponse>>(bootcampStates);
+
+            return new SuccessDataResult<List<GetAllBootcampStateResponse>>(responses, "Listed Successfully");
         }
 
-        public Task<GetByIdBootcampStateResponse> GetById(GetByIdBootcampStateRequest request)
+        public async Task<IDataResult<GetByIdBootcampStateResponse>> GetByIdAsync(GetByIdBootcampStateRequest request)
         {
-            throw new NotImplementedException();
+            var bootcampState = await _bootcampStateRepository.GetByIdAsync(predicate: bootcampState => bootcampState.Id == request.Id);
+
+            if (bootcampState == null)
+            {
+                return new ErrorDataResult<GetByIdBootcampStateResponse>("BootcampState not found");
+            }
+
+            await _bootcampStateRepository.DeleteAsync(bootcampState);
+
+            var response = _mapper.Map<GetByIdBootcampStateResponse>(bootcampState);
+
+            return new SuccessDataResult<GetByIdBootcampStateResponse>(response, "Showed Successfully");
         }
 
-        public Task<UpdateBootcampStateResponse> UpdateAsync(UpdateBootcampStateRequest request)
+        public async Task<IDataResult<UpdateBootcampStateResponse>> UpdateAsync(UpdateBootcampStateRequest request)
         {
-            throw new NotImplementedException();
+            var bootcampState = await _bootcampStateRepository.GetByIdAsync(predicate: bootcampState => bootcampState.Id == request.Id);
+
+            if (bootcampState == null)
+            {
+                return new ErrorDataResult<UpdateBootcampStateResponse>("BootcampState not found");
+            }
+
+            _mapper.Map(request, bootcampState);
+
+            await _bootcampStateRepository.UpdateAsync(bootcampState);
+
+            var response = _mapper.Map<UpdateBootcampStateResponse>(bootcampState);
+
+            return new SuccessDataResult<UpdateBootcampStateResponse>(response, "Updated Successfully");
         }
+
     }
 }

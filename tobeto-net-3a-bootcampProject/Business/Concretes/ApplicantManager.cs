@@ -1,53 +1,31 @@
-﻿
-using Azure;
+﻿using AutoMapper;
 using Business.Abstracts;
 using Business.Requests.Applicants;
 using Business.Responses.Applicants;
-using Business.Responses.Instructors;
 using DataAccess.Abstracts;
-using DataAccess.Concretes.Repositories;
 using Entities.Concretes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concretes
 {
     public class ApplicantManager : IApplicantService
     {
         private readonly IApplicantRepository _applicantRepository;
+        private readonly IMapper _mapper;
 
-        public ApplicantManager(IApplicantRepository applicantRepository)
+        public ApplicantManager(IApplicantRepository applicantRepository, IMapper mapper)
         {
             _applicantRepository = applicantRepository;
+            _mapper = mapper;
         }
 
         public AddApplicantResponse Add(AddApplicantRequest request)
         {
-            Applicant applicant = new Applicant();
-            applicant.UserName = request.UserName;
-            applicant.About = request.About;
-            applicant.FirstName = request.FirstName;
-            applicant.LastName = request.LastName;
-            applicant.DateOfBirth = request.DateOfBirth;
-            applicant.Email = request.Email;
-            applicant.NationalIdentity = request.NationalIdentity;
-            applicant.Password = request.Password;
+            Applicant applicant = _mapper.Map<Applicant>(request);
 
             _applicantRepository.Add(applicant);
 
-            AddApplicantResponse response = new AddApplicantResponse();
-            response.UserName = applicant.UserName;
-            response.CreatedDate = applicant.CreatedDate;
-            response.About = applicant.About;
-            response.FirstName = applicant.FirstName;
-            response.LastName = applicant.LastName;
-            response.DateOfBirth = applicant.DateOfBirth;
-            response.Email = applicant.Email;
-            response.NationalIdentity = applicant.NationalIdentity;
-            response.Password = applicant.Password;
+            AddApplicantResponse response = _mapper.Map<AddApplicantResponse>(applicant);
+
             return response;
         }
 
@@ -59,7 +37,7 @@ namespace Business.Concretes
             {
                 var deletedApplicant = _applicantRepository.Delete(deleteToApplicant);
 
-                var response = new DeleteApplicantResponse {DeletedDate = deletedApplicant.DeletedDate,UserName =deletedApplicant.UserName,Id=deletedApplicant.Id};
+                var response = _mapper.Map<DeleteApplicantResponse>(deletedApplicant);
 
                 return response;
             }
@@ -72,26 +50,11 @@ namespace Business.Concretes
 
         public List<GetAllApplicantResponse> GetAll()
         {
-            List<GetAllApplicantResponse> applicants = new List<GetAllApplicantResponse>();
+            List<Applicant> applicants = _applicantRepository.GetAll();
 
-            foreach(var applicant in _applicantRepository.GetAll())
-            {
-                GetAllApplicantResponse response = new GetAllApplicantResponse();
-                response.Id = applicant.Id;
-                response.UserName = applicant.UserName;
-                response.About = applicant.About;
-                response.FirstName = applicant.FirstName;
-                response.LastName = applicant.LastName;
-                response.DateOfBirth = applicant.DateOfBirth;
-                response.Email = applicant.Email;
-                response.NationalIdentity = applicant.NationalIdentity;
-                response.Password = applicant.Password;
+            List<GetAllApplicantResponse> responses = _mapper.Map<List<GetAllApplicantResponse>>(applicants);
 
-                applicants.Add(response);
-
-            }
-
-            return applicants;
+            return responses;
         }
 
         public GetApplicantByIdResponse GetById(GetApplicantByIdRequest request)
@@ -100,15 +63,8 @@ namespace Business.Concretes
 
             if (applicant != null)
             {
-                GetApplicantByIdResponse response = new GetApplicantByIdResponse();
-                response.UserName = applicant.UserName;
-                response.About = applicant.About;
-                response.FirstName = applicant.FirstName;
-                response.LastName = applicant.LastName;
-                response.DateOfBirth = applicant.DateOfBirth;
-                response.Email = applicant.Email;
-                response.NationalIdentity = applicant.NationalIdentity;
-                response.Password = applicant.Password;
+                GetApplicantByIdResponse response = _mapper.Map<GetApplicantByIdResponse>(applicant);
+
                 return response;
             }
             else
@@ -123,36 +79,16 @@ namespace Business.Concretes
 
             if (updateToApplicant != null)
             {
-
-                updateToApplicant.Id = request.Id;
-                updateToApplicant.UserName = request.UserName;
-                updateToApplicant.About = request.About;
-                updateToApplicant.FirstName = request.FirstName;
-                updateToApplicant.LastName = request.LastName;
-                updateToApplicant.DateOfBirth = request.DateOfBirth;
-                updateToApplicant.Email = request.Email;
-                updateToApplicant.NationalIdentity = request.NationalIdentity;
-                updateToApplicant.Password = request.Password;
+                _mapper.Map(request, updateToApplicant);
 
                 _applicantRepository.Update(updateToApplicant);
 
-                var updatedApplicant = new UpdateApplicantResponse();
-                updatedApplicant.Email = request.Email;
-                updatedApplicant.Id = request.Id;
-                updatedApplicant.UserName = request.UserName;
-                updatedApplicant.About = request.About;
-                updatedApplicant.FirstName = request.FirstName;
-                updatedApplicant.LastName = request.LastName;
-                updatedApplicant.DateOfBirth = request.DateOfBirth;
-                updatedApplicant.NationalIdentity = request.NationalIdentity;
-                updatedApplicant.Password = request.Password;
-                updatedApplicant.UpdatedDate = updateToApplicant.UpdatedDate;
+                var updatedApplicant = _mapper.Map<UpdateApplicantResponse>(updateToApplicant);
 
                 return updatedApplicant;
             }
             else
             {
-                // Handle applicant not found error
                 throw new Exception("Applicant not found");
             }
         }
