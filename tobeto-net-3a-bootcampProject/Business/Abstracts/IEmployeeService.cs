@@ -2,6 +2,7 @@
 using Business.Requests.Employees;
 using Business.Responses.Applicants;
 using Business.Responses.Employees;
+using Core.Utilities.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,10 @@ namespace Business.Abstracts
 {
     public interface IEmployeeService
     {
-        public AddEmployeeResponse Add(AddEmployeeRequest request);
-        public UpdateEmployeeResponse Update(UpdateEmployeeRequest request);
-        public DeleteEmployeeResponse Delete(DeleteEmployeeRequest request);
-        public List<GetAllEmployeeResponse> GetAll();
-        public GetEmployeeByIdResponse GetById(GetEmployeeByIdRequest request);
+        public IDataResult<AddEmployeeResponse> Add(AddEmployeeRequest request);
+        public IDataResult<UpdateEmployeeResponse> Update(UpdateEmployeeRequest request);
+        public IDataResult<DeleteEmployeeResponse> Delete(DeleteEmployeeRequest request);
+        public IDataResult<List<GetAllEmployeeResponse>> GetAll();
+        public IDataResult<GetEmployeeByIdResponse> GetById(GetEmployeeByIdRequest request);
     }
 }

@@ -35,7 +35,7 @@ namespace DataAccess.Concretes.EntityFramework.Contexts
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().
                  SelectMany(e => e.GetForeignKeys()))
             {
-                relationship.DeleteBehavior = DeleteBehavior.Cascade;
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
         }
     }

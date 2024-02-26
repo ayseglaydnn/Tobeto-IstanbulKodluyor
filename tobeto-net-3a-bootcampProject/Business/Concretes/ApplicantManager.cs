@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Azure;
 using Business.Abstracts;
 using Business.Requests.Applicants;
 using Business.Responses.Applicants;
+using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
 
@@ -18,7 +20,7 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
-        public AddApplicantResponse Add(AddApplicantRequest request)
+        public IDataResult<AddApplicantResponse> Add(AddApplicantRequest request)
         {
             Applicant applicant = _mapper.Map<Applicant>(request);
 
@@ -26,10 +28,10 @@ namespace Business.Concretes
 
             AddApplicantResponse response = _mapper.Map<AddApplicantResponse>(applicant);
 
-            return response;
+            return new SuccessDataResult<AddApplicantResponse>(response, "Added Successfully");
         }
 
-        public DeleteApplicantResponse Delete(DeleteApplicantRequest request)
+        public IDataResult<DeleteApplicantResponse> Delete(DeleteApplicantRequest request)
         {
             Applicant deleteToApplicant = _applicantRepository.GetById(predicate: applicant => applicant.Id == request.Id);
 
@@ -39,25 +41,25 @@ namespace Business.Concretes
 
                 var response = _mapper.Map<DeleteApplicantResponse>(deletedApplicant);
 
-                return response;
+                return new SuccessDataResult<DeleteApplicantResponse>(response, "Deleted Successfully");
             }
             else
             {
-                throw new Exception("Applicant not found");
+                return new ErrorDataResult<DeleteApplicantResponse>("Applicant not found");
             }
 
         }
 
-        public List<GetAllApplicantResponse> GetAll()
+        public IDataResult<List<GetAllApplicantResponse>> GetAll()
         {
             List<Applicant> applicants = _applicantRepository.GetAll();
 
             List<GetAllApplicantResponse> responses = _mapper.Map<List<GetAllApplicantResponse>>(applicants);
 
-            return responses;
+            return new SuccessDataResult<List<GetAllApplicantResponse>>(responses, "Listed Successfully");
         }
 
-        public GetApplicantByIdResponse GetById(GetApplicantByIdRequest request)
+        public IDataResult<GetApplicantByIdResponse> GetById(GetApplicantByIdRequest request)
         {
             Applicant applicant = _applicantRepository.GetById(predicate: applicant => applicant.Id == request.Id);
 
@@ -65,15 +67,15 @@ namespace Business.Concretes
             {
                 GetApplicantByIdResponse response = _mapper.Map<GetApplicantByIdResponse>(applicant);
 
-                return response;
+                return new SuccessDataResult<GetApplicantByIdResponse>(response, "Showed Successfully");
             }
             else
             {
-                throw new Exception("Employee not found");
+                return new ErrorDataResult<GetApplicantByIdResponse>("Applicant not found");
             }
         }
 
-        public UpdateApplicantResponse Update(UpdateApplicantRequest request)
+        public IDataResult<UpdateApplicantResponse> Update(UpdateApplicantRequest request)
         {
             Applicant updateToApplicant = _applicantRepository.GetById(predicate: applicant => applicant.Id == request.Id);
 
@@ -83,13 +85,13 @@ namespace Business.Concretes
 
                 _applicantRepository.Update(updateToApplicant);
 
-                var updatedApplicant = _mapper.Map<UpdateApplicantResponse>(updateToApplicant);
+                var response = _mapper.Map<UpdateApplicantResponse>(updateToApplicant);
 
-                return updatedApplicant;
+                return new SuccessDataResult<UpdateApplicantResponse>(response, "Updated Successfully");
             }
             else
             {
-                throw new Exception("Applicant not found");
+                return new ErrorDataResult<UpdateApplicantResponse>("Applicant not found");
             }
         }
     }

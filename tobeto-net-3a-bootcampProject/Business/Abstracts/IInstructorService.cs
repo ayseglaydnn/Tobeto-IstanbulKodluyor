@@ -1,5 +1,6 @@
 ﻿using Business.Requests.Instructors;
 using Business.Responses.Instructors;
+using Core.Utilities.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,10 @@ namespace Business.Abstracts
 {
     public interface IInstructorService
     {
-        public AddInstructorResponse Add(AddInstructorRequest request);
-        public UpdateInstructorResponse Update(UpdateInstructorRequest request);
-        public DeleteInstructorResponse Delete(DeleteInstructorRequest request);
-        public List<GetAllInstructorResponse> GetAll();
-        public GetInstructorByIdResponse GetById(GetInstructorByIdRequest request);
+        public IDataResult<AddInstructorResponse> Add(AddInstructorRequest request);
+        public IDataResult<UpdateInstructorResponse> Update(UpdateInstructorRequest request);
+        public IDataResult<DeleteInstructorResponse> Delete(DeleteInstructorRequest request);
+        public IDataResult<List<GetAllInstructorResponse>> GetAll();
+        public IDataResult<GetInstructorByIdResponse> GetById(GetInstructorByIdRequest request);
     }
 }

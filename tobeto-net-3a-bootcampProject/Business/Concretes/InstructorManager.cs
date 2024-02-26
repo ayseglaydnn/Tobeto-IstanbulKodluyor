@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Azure;
 using Business.Abstracts;
 using Business.Requests.Instructors;
+using Business.Responses.Employees;
 using Business.Responses.Instructors;
+using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
 
@@ -19,7 +22,7 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
-        public AddInstructorResponse Add(AddInstructorRequest request)
+        public IDataResult<AddInstructorResponse> Add(AddInstructorRequest request)
         {
             Instructor instructor = _mapper.Map<Instructor>(request);
 
@@ -27,10 +30,10 @@ namespace Business.Concretes
 
             AddInstructorResponse response = _mapper.Map<AddInstructorResponse>(request);
 
-             return response;
+            return new SuccessDataResult<AddInstructorResponse>(response, "Added Successfully.");
         }
 
-        public DeleteInstructorResponse Delete(DeleteInstructorRequest request)
+        public IDataResult<DeleteInstructorResponse> Delete(DeleteInstructorRequest request)
         {
             Instructor deleteToInstructor = _instructorRepository.GetById(predicate: instructor => instructor.Id == request.Id);
 
@@ -39,25 +42,25 @@ namespace Business.Concretes
                 var deletedInstructor = _instructorRepository.Delete(deleteToInstructor);
 
                 var response = new DeleteInstructorResponse { DeletedTime = deletedInstructor.DeletedDate, UserName = deletedInstructor.UserName, Id = deletedInstructor.Id };
-                
-                return response;
+
+                return new SuccessDataResult<DeleteInstructorResponse>(response, "Deleted Successfully.");
             }
             else
             {
-                throw new Exception("Instructor not found");
+                return new ErrorDataResult<DeleteInstructorResponse>("Instructor not found");
             }
         }
 
-        public List<GetAllInstructorResponse> GetAll()
+        public IDataResult<List<GetAllInstructorResponse>> GetAll()
         {
             List<Instructor> instructors = _instructorRepository.GetAll();
 
             var responses = _mapper.Map<List<GetAllInstructorResponse>>(instructors);
 
-            return responses;
+            return new SuccessDataResult<List<GetAllInstructorResponse>>(responses, "Listed Successfully.");
         }
 
-        public GetInstructorByIdResponse GetById(GetInstructorByIdRequest request)
+        public IDataResult<GetInstructorByIdResponse> GetById(GetInstructorByIdRequest request)
         {
             Instructor instructor = _instructorRepository.GetById(predicate: instructor => instructor.Id == request.Id);
 
@@ -65,15 +68,15 @@ namespace Business.Concretes
             {
                 GetInstructorByIdResponse response = _mapper.Map<GetInstructorByIdResponse>(instructor);
 
-                return response;
+                return new SuccessDataResult<GetInstructorByIdResponse>(response, "Showed Successfully.");
             }
             else
             {
-                throw new Exception("Instructor not found");
+                return new ErrorDataResult<GetInstructorByIdResponse>("Instructor not found");
             }
         }
 
-        public UpdateInstructorResponse Update(UpdateInstructorRequest request)
+        public IDataResult<UpdateInstructorResponse> Update(UpdateInstructorRequest request)
         {
             Instructor updateToInstructor = _instructorRepository.GetById(predicate: instructor => instructor.Id == request.Id);
 
@@ -83,14 +86,14 @@ namespace Business.Concretes
 
                 _instructorRepository.Update(updateToInstructor);
 
-                var updatedInstructor = _mapper.Map<UpdateInstructorResponse>(updateToInstructor);
+                var response = _mapper.Map<UpdateInstructorResponse>(updateToInstructor);
 
-                return updatedInstructor;
+                return new SuccessDataResult<UpdateInstructorResponse>(response, "Updated Successfully");
             }
             else
             {
                 // Handle Instructor not found error
-                throw new Exception("Instructor not found");
+                return new ErrorDataResult<UpdateInstructorResponse>("Instructor not found");
             }
         }
     }
