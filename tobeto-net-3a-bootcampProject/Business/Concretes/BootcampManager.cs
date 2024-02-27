@@ -65,8 +65,6 @@ namespace Business.Concretes
                 return new ErrorDataResult<GetByIdBootcampResponse>("Bootcamp not found");
             }
 
-            await _bootcampRepository.DeleteAsync(bootcamp);
-
             var response = _mapper.Map<GetByIdBootcampResponse>(bootcamp);
 
             return new SuccessDataResult<GetByIdBootcampResponse>(response, "Showed Successfully");

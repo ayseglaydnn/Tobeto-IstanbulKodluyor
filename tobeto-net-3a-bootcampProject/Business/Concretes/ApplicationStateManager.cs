@@ -66,8 +66,6 @@ namespace Business.Concretes
                 return new ErrorDataResult<GetByIdApplicationStateResponse>("ApplicationState not found");
             }
 
-            await _applicationStateRepository.DeleteAsync(applicationState);
-
             var response = _mapper.Map<GetByIdApplicationStateResponse>(applicationState);
 
             return new SuccessDataResult<GetByIdApplicationStateResponse>(response, "Showed Successfully");

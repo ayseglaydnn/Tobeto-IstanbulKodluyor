@@ -18,6 +18,7 @@ namespace DataAccess.Concretes.EntityFramework.EntityTypeConfigurations
             builder.Property(a => a.About).IsRequired().HasMaxLength(500).HasColumnName("About");
 
             builder.HasMany(x => x.Applications); //one to many
+            builder.HasOne(x => x.Blacklist); //one to one
         }
     }
 }

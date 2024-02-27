@@ -11,6 +11,7 @@ namespace Entities.Concretes
         public string About { get; set; }
 
         public virtual ICollection<Application>? Applications { get; set; }
+        public virtual Blacklist? Blacklist { get; set; }
 
     }
 }
