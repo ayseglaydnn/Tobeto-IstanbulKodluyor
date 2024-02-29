@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Requests.BootcampStates;
+using Business.Responses.Bootcamps;
 using Business.Responses.BootcampStates;
 using Entities.Concretes;
 
@@ -15,6 +16,8 @@ namespace Business.Profiles.BootcampStates
 
             CreateMap<BootcampState, UpdateBootcampStateRequest>().ReverseMap();
             CreateMap<BootcampState, UpdateBootcampStateResponse>().ReverseMap();
+
+            CreateMap<BootcampState, DeleteBootcampStateResponse>().ReverseMap();
 
             CreateMap<BootcampState, GetByIdBootcampStateResponse>().ReverseMap();
             CreateMap<BootcampState, GetAllBootcampStateResponse>().ReverseMap();

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Business.Requests.Applications;
 using Business.Responses.Applications;
+using Business.Responses.Blacklists;
 using Entities.Concretes;
 
 namespace Business.Profiles.Applications
@@ -14,6 +15,8 @@ namespace Business.Profiles.Applications
 
             CreateMap<Application, UpdateApplicationRequest>().ReverseMap();
             CreateMap<Application, UpdateApplicationResponse>().ReverseMap();
+
+            CreateMap<Application, DeleteApplicationResponse>().ReverseMap();
 
             CreateMap<Application, GetByIdApplicationResponse>().ReverseMap();
             CreateMap<Application, GetAllApplicationResponse>().ReverseMap();
