@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Rules;
 using Business.Requests.Blacklists;
 using Business.Responses.Applications;
 using Business.Responses.Blacklists;
@@ -21,15 +22,20 @@ namespace Business.Concretes
     {
         private readonly IBlacklistRepository _blacklistRepository;
         private readonly IMapper _mapper;
+        private readonly BlacklistBusinessRules _blacklistBusinessRules;
 
-        public BlacklistManager(IBlacklistRepository blacklistRepository, IMapper mapper)
+
+        public BlacklistManager(IBlacklistRepository blacklistRepository, IMapper mapper, BlacklistBusinessRules blacklistBusinessRules)
         {
             _blacklistRepository = blacklistRepository;
             _mapper = mapper;
+            _blacklistBusinessRules = blacklistBusinessRules;
         }
 
         public async Task<IDataResult<CreateBlacklistResponse>> AddAsync(CreateBlacklistRequest request)
         {
+            await _blacklistBusinessRules.CheckIfApplicantIdInBlacklist(request.ApplicantId);
+
             Blacklist blacklist = _mapper.Map<Blacklist>(request);
 
             await _blacklistRepository.AddAsync(blacklist);
@@ -44,10 +50,7 @@ namespace Business.Concretes
         {
             var blacklist = await _blacklistRepository.GetByIdAsync(predicate: blacklist => blacklist.Id == request.Id);
 
-            if (blacklist == null)
-            {
-                return new ErrorDataResult<DeleteBlacklistResponse>("Blacklist not found");
-            }
+            await _blacklistBusinessRules.CheckIfBlacklistExists(blacklist);
 
             await _blacklistRepository.DeleteAsync(blacklist);
 
@@ -69,10 +72,7 @@ namespace Business.Concretes
         {
             var blacklist = await _blacklistRepository.GetByIdAsync(predicate: blacklist => blacklist.Id == request.Id);
 
-            if (blacklist == null)
-            {
-                return new ErrorDataResult<GetByIdBlacklistResponse>("Blacklist not found");
-            }
+            await _blacklistBusinessRules.CheckIfBlacklistExists(blacklist);
 
             var response = _mapper.Map<GetByIdBlacklistResponse>(blacklist);
 
@@ -83,10 +83,7 @@ namespace Business.Concretes
         {
             var blacklist = await _blacklistRepository.GetByIdAsync(predicate: blacklist => blacklist.Id == request.Id);
 
-            if (blacklist == null)
-            {
-                return new ErrorDataResult<UpdateBlacklistResponse>("Blacklist not found");
-            }
+            await _blacklistBusinessRules.CheckIfBlacklistExists(blacklist);
 
             _mapper.Map(request, blacklist); 
 

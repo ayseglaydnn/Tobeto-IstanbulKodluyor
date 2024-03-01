@@ -3,6 +3,7 @@ using Azure;
 using Business.Abstracts;
 using Business.Requests.Applicants;
 using Business.Responses.Applicants;
+using Business.Rules;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -13,16 +14,20 @@ namespace Business.Concretes
     {
         private readonly IApplicantRepository _applicantRepository;
         private readonly IMapper _mapper;
+        private readonly ApplicantBusinessRules _applicantBusinessRules;
 
-        public ApplicantManager(IApplicantRepository applicantRepository, IMapper mapper)
+        public ApplicantManager(IApplicantRepository applicantRepository, IMapper mapper, ApplicantBusinessRules applicantBusinessRules)
         {
             _applicantRepository = applicantRepository;
             _mapper = mapper;
+            _applicantBusinessRules = applicantBusinessRules;
         }
 
         public IDataResult<AddApplicantResponse> Add(AddApplicantRequest request)
         {
             Applicant applicant = _mapper.Map<Applicant>(request);
+
+            _applicantBusinessRules.CheckIfEmailRegistered(request.Email);
 
             _applicantRepository.Add(applicant);
 
@@ -35,18 +40,13 @@ namespace Business.Concretes
         {
             Applicant deleteToApplicant = _applicantRepository.GetById(predicate: applicant => applicant.Id == request.Id);
 
-            if (deleteToApplicant != null)
-            {
-                var deletedApplicant = _applicantRepository.Delete(deleteToApplicant);
+            _applicantBusinessRules.CheckIfApplicantExists(deleteToApplicant);
 
-                var response = _mapper.Map<DeleteApplicantResponse>(deletedApplicant);
+            var deletedApplicant = _applicantRepository.Delete(deleteToApplicant);
 
-                return new SuccessDataResult<DeleteApplicantResponse>(response, "Deleted Successfully");
-            }
-            else
-            {
-                return new ErrorDataResult<DeleteApplicantResponse>("Applicant not found");
-            }
+            var response = _mapper.Map<DeleteApplicantResponse>(deletedApplicant);
+
+            return new SuccessDataResult<DeleteApplicantResponse>(response, "Deleted Successfully");
 
         }
 
@@ -63,36 +63,28 @@ namespace Business.Concretes
         {
             Applicant applicant = _applicantRepository.GetById(predicate: applicant => applicant.Id == request.Id);
 
-            if (applicant != null)
-            {
-                GetApplicantByIdResponse response = _mapper.Map<GetApplicantByIdResponse>(applicant);
+            _applicantBusinessRules.CheckIfApplicantExists(applicant);
 
-                return new SuccessDataResult<GetApplicantByIdResponse>(response, "Showed Successfully");
-            }
-            else
-            {
-                return new ErrorDataResult<GetApplicantByIdResponse>("Applicant not found");
-            }
+            GetApplicantByIdResponse response = _mapper.Map<GetApplicantByIdResponse>(applicant);
+
+            return new SuccessDataResult<GetApplicantByIdResponse>(response, "Showed Successfully");
+
         }
 
         public IDataResult<UpdateApplicantResponse> Update(UpdateApplicantRequest request)
         {
             Applicant updateToApplicant = _applicantRepository.GetById(predicate: applicant => applicant.Id == request.Id);
 
-            if (updateToApplicant != null)
-            {
-                _mapper.Map(request, updateToApplicant);
+            _applicantBusinessRules.CheckIfApplicantExists(updateToApplicant);
 
-                _applicantRepository.Update(updateToApplicant);
+            _mapper.Map(request, updateToApplicant);
 
-                var response = _mapper.Map<UpdateApplicantResponse>(updateToApplicant);
+            _applicantRepository.Update(updateToApplicant);
 
-                return new SuccessDataResult<UpdateApplicantResponse>(response, "Updated Successfully");
-            }
-            else
-            {
-                return new ErrorDataResult<UpdateApplicantResponse>("Applicant not found");
-            }
+            var response = _mapper.Map<UpdateApplicantResponse>(updateToApplicant);
+
+            return new SuccessDataResult<UpdateApplicantResponse>(response, "Updated Successfully");
+
         }
     }
 }
