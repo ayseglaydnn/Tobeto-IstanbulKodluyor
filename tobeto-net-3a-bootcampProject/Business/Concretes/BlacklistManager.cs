@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
+using Business.Constants;
 
 namespace Business.Concretes
 {
@@ -42,7 +43,7 @@ namespace Business.Concretes
 
             var response = _mapper.Map<CreateBlacklistResponse>(blacklist);
 
-            return new SuccessDataResult<CreateBlacklistResponse>(response, "Added Successfully.");
+            return new SuccessDataResult<CreateBlacklistResponse>(response, BlacklistMessages.Added);
 
         }
 
@@ -56,7 +57,7 @@ namespace Business.Concretes
 
             var response = _mapper.Map<DeleteBlacklistResponse>(blacklist);
 
-            return new SuccessDataResult<DeleteBlacklistResponse>(response, "Deleted Successfully");
+            return new SuccessDataResult<DeleteBlacklistResponse>(response, BlacklistMessages.Deleted);
         }
 
         public async Task<IDataResult<List<GetAllBlacklistResponse>>> GetAllAsync()
@@ -65,7 +66,7 @@ namespace Business.Concretes
 
             List<GetAllBlacklistResponse> responses = _mapper.Map<List<GetAllBlacklistResponse>>(blacklists);
 
-            return new SuccessDataResult<List<GetAllBlacklistResponse>>(responses, "Listed Successfully");
+            return new SuccessDataResult<List<GetAllBlacklistResponse>>(responses, BlacklistMessages.Listed);
         }
 
         public async Task<IDataResult<GetByIdBlacklistResponse>> GetByIdAsync(GetByIdBlacklistRequest request)
@@ -76,7 +77,7 @@ namespace Business.Concretes
 
             var response = _mapper.Map<GetByIdBlacklistResponse>(blacklist);
 
-            return new SuccessDataResult<GetByIdBlacklistResponse>(response, "Showed Successfully");
+            return new SuccessDataResult<GetByIdBlacklistResponse>(response, BlacklistMessages.Showed);
         }
 
         public async Task<IDataResult<UpdateBlacklistResponse>> UpdateAsync(UpdateBlacklistRequest request)
@@ -91,7 +92,7 @@ namespace Business.Concretes
 
             var response = _mapper.Map<UpdateBlacklistResponse>(blacklist);
 
-            return new SuccessDataResult<UpdateBlacklistResponse>(response, "Updated Successfully");
+            return new SuccessDataResult<UpdateBlacklistResponse>(response, BlacklistMessages.Updated);
         }
     }
 }

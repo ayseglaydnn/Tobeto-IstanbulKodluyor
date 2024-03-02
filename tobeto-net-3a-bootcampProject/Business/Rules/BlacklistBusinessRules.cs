@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using Business.Abstracts;
+using Business.Constants;
 using Business.Requests.Blacklists;
 using Core.CrossCuttingConcerns.Rules;
 using Core.Exceptions.Types;
@@ -24,14 +25,14 @@ namespace Business.Rules
 
         public async Task CheckIfBlacklistExists(Blacklist? blacklist)
         {
-            if (blacklist is null) throw new NotFoundException("Blacklist not found.");
+            if (blacklist is null) throw new NotFoundException(BlacklistMessages.NotFound);
         }
         
         public async Task CheckIfApplicantIdInBlacklist(int? applicantId)
         {
             var blacklist = await _blacklistRepository.GetByIdAsync(predicate: blacklist => blacklist.Id == applicantId);
 
-            if (blacklist is not null) throw new BusinessException("ApplicantId already in Blacklists."); ;
+            if (blacklist is not null) throw new BusinessException(BlacklistMessages.AlreadyExist); ;
         }
     }
 }
