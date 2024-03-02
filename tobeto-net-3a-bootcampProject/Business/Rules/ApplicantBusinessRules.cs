@@ -29,7 +29,7 @@ namespace Business.Rules
         {
             var applicant = await _applicantRepository.GetByIdAsync(predicate: applicant => applicant.Email == email);
 
-            if (applicant is null) throw new BusinessException("There is already a user with this email."); ;
+            if (applicant is not null) throw new BusinessException("There is already a user with this email."); ;
         }
     }
 }

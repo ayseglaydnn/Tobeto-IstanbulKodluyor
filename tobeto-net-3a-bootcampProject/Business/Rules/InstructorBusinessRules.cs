@@ -29,7 +29,7 @@ namespace Business.Rules
         {
             var instructor = await _instructorRepository.GetByIdAsync(predicate: instructor => instructor.Email == email);
 
-            if (instructor is null) throw new BusinessException("There is already an instructor with this email."); ;
+            if (instructor is not null) throw new BusinessException("There is already an instructor with this email."); ;
         }
     }
 }

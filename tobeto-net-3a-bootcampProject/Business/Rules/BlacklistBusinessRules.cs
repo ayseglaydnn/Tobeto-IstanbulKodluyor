@@ -31,7 +31,7 @@ namespace Business.Rules
         {
             var blacklist = await _blacklistRepository.GetByIdAsync(predicate: blacklist => blacklist.Id == applicantId);
 
-            if (blacklist is null) throw new BusinessException("ApplicantId already in Blacklists."); ;
+            if (blacklist is not null) throw new BusinessException("ApplicantId already in Blacklists."); ;
         }
     }
 }

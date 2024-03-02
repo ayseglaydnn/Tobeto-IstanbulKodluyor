@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Azure;
 using Business.Abstracts;
 using Business.Requests.Instructors;
-using Business.Responses.Employees;
 using Business.Responses.Instructors;
 using Business.Rules;
 using Core.Utilities.Results;

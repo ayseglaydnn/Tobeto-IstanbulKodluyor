@@ -2,6 +2,7 @@
 using Business.Abstracts;
 using Business.Requests.Applications;
 using Business.Responses.Applications;
+using Business.Rules;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -13,17 +14,21 @@ namespace Business.Concretes
     {
         private readonly IApplicationRepository _applicationRepository;
         private readonly IMapper _mapper;
+        private readonly ApplicationBusinessRules _applicationBusinessRules;
 
-        public ApplicationManager(IApplicationRepository applicationRepository, IMapper mapper)
+        public ApplicationManager(IApplicationRepository applicationRepository, IMapper mapper, ApplicationBusinessRules applicationBusinessRules)
         {
             _applicationRepository = applicationRepository;
             _mapper = mapper;
+            _applicationBusinessRules = applicationBusinessRules;
         }
 
         public async Task<IDataResult<CreateApplicationResponse>> AddAsync(CreateApplicationRequest request)
         {
             Application application = _mapper.Map<Application>(request);
-            
+
+            await _applicationBusinessRules.CheckIfApplicationMaked(request.ApplicantId, request.BootcampId);
+
             await _applicationRepository.AddAsync(application);
 
             CreateApplicationResponse response = _mapper.Map<CreateApplicationResponse>(application);
@@ -34,11 +39,8 @@ namespace Business.Concretes
         public async Task<IDataResult<DeleteApplicationResponse>> DeleteAsync(DeleteApplicationRequest request)
         {
             var application = await _applicationRepository.GetByIdAsync(predicate: application => application.Id == request.Id);
-            
-            if (application == null)
-            {
-                return new ErrorDataResult<DeleteApplicationResponse>("Application not found");
-            }
+
+            await _applicationBusinessRules.CheckIfApplicationExists(application);
 
             await _applicationRepository.DeleteAsync(application);
 
@@ -60,10 +62,7 @@ namespace Business.Concretes
         {
             var application = await _applicationRepository.GetByIdAsync(predicate: application => application.Id == request.Id);
 
-            if (application == null)
-            {
-                return new ErrorDataResult<GetByIdApplicationResponse>("Application not found");
-            }
+            await _applicationBusinessRules.CheckIfApplicationExists(application);
 
             var response = _mapper.Map<GetByIdApplicationResponse>(application);
 
@@ -74,10 +73,7 @@ namespace Business.Concretes
         {
             var application = await _applicationRepository.GetByIdAsync(predicate: application => application.Id == request.Id);
 
-            if (application == null)
-            {
-                return new ErrorDataResult<UpdateApplicationResponse>("Application not found");
-            }
+            await _applicationBusinessRules.CheckIfApplicationExists(application);
 
             _mapper.Map(request, application); // Burada application nesnesinin verileri request nesnesindeki veriler ile güncelleniyor.
 
