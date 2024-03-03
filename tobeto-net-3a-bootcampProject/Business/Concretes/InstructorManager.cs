@@ -31,7 +31,7 @@ namespace Business.Concretes
 
             _instructorRepository.Add(instructor);
 
-            AddInstructorResponse response = _mapper.Map<AddInstructorResponse>(request);
+            AddInstructorResponse response = _mapper.Map<AddInstructorResponse>(instructor);
 
             return new SuccessDataResult<AddInstructorResponse>(response, "Added Successfully.");
         }

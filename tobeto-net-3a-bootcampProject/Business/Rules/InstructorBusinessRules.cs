@@ -25,9 +25,9 @@ namespace Business.Rules
             if (instructor is null) throw new NotFoundException("Instructor not found.");
         }
 
-        public async Task CheckIfEmailRegistered(string? email)
+        public void CheckIfEmailRegistered(string? email)
         {
-            var instructor = await _instructorRepository.GetByIdAsync(predicate: instructor => instructor.Email == email);
+            var instructor = _instructorRepository.GetById(predicate: instructor => instructor.Email == email);
 
             if (instructor is not null) throw new BusinessException("There is already an instructor with this email."); ;
         }

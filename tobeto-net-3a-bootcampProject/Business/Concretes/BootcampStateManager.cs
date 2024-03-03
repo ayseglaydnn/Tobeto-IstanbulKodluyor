@@ -2,6 +2,7 @@
 using Business.Abstracts;
 using Business.Requests.BootcampStates;
 using Business.Responses.BootcampStates;
+using Business.Rules;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -13,11 +14,13 @@ namespace Business.Concretes
     {
         private readonly IBootcampStateRepository _bootcampStateRepository;
         private readonly IMapper _mapper;
+        private readonly BootcampStateBusinessRules _bootcampStateBusinessRules;
 
-        public BootcampStateManager(IBootcampStateRepository bootcampStateRepository, IMapper mapper)
+        public BootcampStateManager(IBootcampStateRepository bootcampStateRepository, IMapper mapper, BootcampStateBusinessRules bootcampStateBusinessRules)
         {
             _bootcampStateRepository = bootcampStateRepository;
             _mapper = mapper;
+            _bootcampStateBusinessRules = bootcampStateBusinessRules;
         }
 
         public async Task<IDataResult<CreateBootcampStateResponse>> AddAsync(CreateBootcampStateRequest request)
@@ -35,10 +38,7 @@ namespace Business.Concretes
         {
             var bootcampState = await _bootcampStateRepository.GetByIdAsync(predicate: bootcampState => bootcampState.Id == request.Id);
 
-            if (bootcampState == null)
-            {
-                return new ErrorDataResult<DeleteBootcampStateResponse>("BootcampState not found");
-            }
+            await _bootcampStateBusinessRules.CheckIfBootcampStateExists(bootcampState);
 
             var response = _mapper.Map<DeleteBootcampStateResponse>(bootcampState);
 
@@ -58,10 +58,7 @@ namespace Business.Concretes
         {
             var bootcampState = await _bootcampStateRepository.GetByIdAsync(predicate: bootcampState => bootcampState.Id == request.Id);
 
-            if (bootcampState == null)
-            {
-                return new ErrorDataResult<GetByIdBootcampStateResponse>("BootcampState not found");
-            }
+            await _bootcampStateBusinessRules.CheckIfBootcampStateExists(bootcampState);
 
             await _bootcampStateRepository.DeleteAsync(bootcampState);
 
@@ -74,10 +71,7 @@ namespace Business.Concretes
         {
             var bootcampState = await _bootcampStateRepository.GetByIdAsync(predicate: bootcampState => bootcampState.Id == request.Id);
 
-            if (bootcampState == null)
-            {
-                return new ErrorDataResult<UpdateBootcampStateResponse>("BootcampState not found");
-            }
+            await _bootcampStateBusinessRules.CheckIfBootcampStateExists(bootcampState);
 
             _mapper.Map(request, bootcampState);
 

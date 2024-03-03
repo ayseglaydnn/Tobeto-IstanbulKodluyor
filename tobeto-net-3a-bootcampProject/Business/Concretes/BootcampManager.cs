@@ -2,6 +2,7 @@
 using Business.Abstracts;
 using Business.Requests.Bootcamps;
 using Business.Responses.Bootcamps;
+using Business.Rules;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
@@ -13,17 +14,22 @@ namespace Business.Concretes
     {
         private readonly IBootcampRepository _bootcampRepository;
         private readonly IMapper _mapper;
+        private readonly BootcampBusinessRules _bootcampBusinessRules;
 
-        public BootcampManager(IBootcampRepository bootcampRepository, IMapper mapper)
+        public BootcampManager(IBootcampRepository bootcampRepository, IMapper mapper, BootcampBusinessRules bootcampBusinessRules)
         {
             _bootcampRepository = bootcampRepository;
             _mapper = mapper;
+            _bootcampBusinessRules = bootcampBusinessRules;
         }
 
 
         public async Task<IDataResult<CreateBootcampResponse>> AddAsync(CreateBootcampRequest request)
         {
             Bootcamp bootcamp = _mapper.Map<Bootcamp>(request);
+
+            await _bootcampBusinessRules.CheckIfBootcampNameExists(bootcamp.Name,bootcamp.InstructorId);
+
             await _bootcampRepository.AddAsync(bootcamp);
 
             CreateBootcampResponse response = _mapper.Map<CreateBootcampResponse>(bootcamp);
@@ -35,10 +41,7 @@ namespace Business.Concretes
         {
             var bootcamp = await _bootcampRepository.GetByIdAsync(predicate: bootcamp => bootcamp.Id == request.Id);
 
-            if (bootcamp == null)
-            {
-                return new ErrorDataResult<DeleteBootcampResponse>("Bootcamp not found");
-            }
+            await _bootcampBusinessRules.CheckIfBootcampExists(bootcamp);
 
             await _bootcampRepository.DeleteAsync(bootcamp);
 
@@ -60,10 +63,7 @@ namespace Business.Concretes
         {
             var bootcamp = await _bootcampRepository.GetByIdAsync(predicate: bootcamp => bootcamp.Id == request.Id);
 
-            if (bootcamp == null)
-            {
-                return new ErrorDataResult<GetByIdBootcampResponse>("Bootcamp not found");
-            }
+            await _bootcampBusinessRules.CheckIfBootcampExists(bootcamp);
 
             var response = _mapper.Map<GetByIdBootcampResponse>(bootcamp);
 
@@ -74,10 +74,7 @@ namespace Business.Concretes
         {
             var bootcamp = await _bootcampRepository.GetByIdAsync(predicate: bootcamp => bootcamp.Id == request.Id);
 
-            if (bootcamp == null)
-            {
-                return new ErrorDataResult<UpdateBootcampResponse>("Bootcamp not found");
-            }
+            await _bootcampBusinessRules.CheckIfBootcampExists(bootcamp);
 
             _mapper.Map(request, bootcamp);
 

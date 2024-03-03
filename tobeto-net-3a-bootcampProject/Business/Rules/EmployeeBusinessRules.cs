@@ -25,9 +25,9 @@ namespace Business.Rules
             if (employee is null) throw new NotFoundException("Employee not found.");
         }
 
-        public async Task CheckIfEmailRegistered(string? email)
+        public void CheckIfEmailRegistered(string? email)
         {
-            var employee = await _employeeRepository.GetByIdAsync(predicate: employee => employee.Email == email);
+            var employee = _employeeRepository.GetById(predicate: employee => employee.Email == email);
 
             if (employee is not null) throw new BusinessException("There is already an employee with this email."); ;
         }

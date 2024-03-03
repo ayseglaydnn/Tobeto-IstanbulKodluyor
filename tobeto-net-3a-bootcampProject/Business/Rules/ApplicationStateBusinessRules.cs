@@ -12,11 +12,11 @@ namespace Business.Rules
 {
     public class ApplicationStateBusinessRules : BaseBusinessRules
     {
-        private readonly IApplicationRepository _applicationRepository;
+        private readonly IApplicationStateRepository _applicationStateRepository;
 
-        public ApplicationStateBusinessRules(IApplicationRepository applicationRepository)
+        public ApplicationStateBusinessRules(IApplicationStateRepository applicationStateRepository)
         {
-            _applicationRepository = applicationRepository;
+            _applicationStateRepository = applicationStateRepository;
         }
 
         public async Task CheckIfApplicationStateExists(ApplicationState? applicationState)

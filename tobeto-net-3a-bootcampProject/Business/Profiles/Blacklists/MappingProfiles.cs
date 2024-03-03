@@ -14,7 +14,7 @@ namespace Business.Profiles.Blacklists
 {
     public class MappingProfiles : Profile
     {
-        protected internal MappingProfiles(string profileName) : base(profileName)
+        public MappingProfiles()
         {
             CreateMap<Blacklist, CreateBlacklistRequest>().ReverseMap();
             CreateMap<Blacklist, CreateBlacklistResponse>().ReverseMap();

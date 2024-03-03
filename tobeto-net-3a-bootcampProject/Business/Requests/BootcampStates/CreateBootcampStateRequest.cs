@@ -10,6 +10,5 @@ namespace Business.Requests.BootcampStates
     {
         public string Name { get; set; }
     }
-
    
 }
